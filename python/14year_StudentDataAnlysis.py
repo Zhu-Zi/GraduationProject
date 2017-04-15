@@ -18,8 +18,23 @@ class Student:
         self.studentName = 'test'
         self.studentConsumptions = 0.00
         self.studentBalance = 0.00
-        self.settlementTime = 0.00
+        self.settlementDate = 0.00
+        self.settlementDateTime = 0.00
         self.machineNum = '0'
+
+# 读取 Excel 表格中的时间并转化为 python 的 float 类型
+def excel_time_float(excel_time):
+    info_date = xlrd.xldate.xldate_as_datetime(excel_time, 0)
+    info_str = str(info_date)
+    datetime_pool = info_str.split(' ')
+    info_date_str = datetime_pool[0]  # 结算日期 'y-m-d'
+    info_datetime_str = info_str  # 结算日期时间 'y-m-d H-M-S'
+    info_date_tuple = time.strptime(info_date_str, '%Y-%m-%d')
+    info_datetime_tuple = time.strptime(info_datetime_str, '%Y-%m-%d %H:%M:%S')
+    info_date_float = time.mktime(info_date_tuple)
+    info_datetime_float = time.mktime(info_datetime_tuple)
+
+    return info_date_float, info_datetime_float
 
 # 指明被遍历文件夹
 rootdir = "C:\\Users\\Keyboard\\Desktop\\毕设\\TestData\\EduceationTestData\\14yearData\\14中国语言文学"
@@ -59,7 +74,8 @@ for file in filesList:
                 student.studentName = table.cell(r, 2).value
                 student.studentConsumptions = table.cell(r, 4).value
                 student.studentBalance = table.cell(r, 5).value
-                student.settlementTime = table.cell(r, 6).value
+                student.settlementDate = excel_time_float(table.cell(r, 6).value)[0]
+                student.settlementDateTime = excel_time_float(table.cell(r, 6).value)[1]
                 student.machineNum = table.cell(r, 8).value
 
                 # 将对象转化为字典类型
@@ -75,6 +91,8 @@ for file in filesList:
 #     print(item['studentName'])
 #     print(item['studentConsumptions'])
 #     print(item['machineNum'])
+#     print(item['settlementDate'])
+#     print(item['settlementDateTime'])
 
 data = p.DataFrame(stuDataList)
 # 各机器消费次数统计
@@ -86,4 +104,20 @@ print(consumptions)
 # 消费总额
 totalConsumption = data['studentConsumptions'].sum()
 print('消费总额为: %.2f' % totalConsumption)
+# 消费日期聚合统计
+dateInfo = data.groupby(['settlementDate']).size()
+print(dateInfo)
 
+dateFloat = 0.0
+for item in dateInfo.index:
+    flag = dateInfo[item]
+    if flag > 27:
+        dateFloat = item
+
+studentByDatetime = []
+for item in stuDataList:
+    if item['settlementDate'] == dateFloat:
+        studentByDatetime.append(item)
+
+data = p.DataFrame(studentByDatetime)
+print(data)
