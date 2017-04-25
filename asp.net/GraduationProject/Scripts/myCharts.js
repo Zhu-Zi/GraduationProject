@@ -5,7 +5,10 @@ function init() {
     stuConsumptionsScatterPlot();
     facultyConsumptionNestedRingDiagram();
     stuConsumptionTimePie();
-    facultyAbsenteeismTreemap()
+    facultyAbsenteeismTreemap();
+    getSpecialStuConsumptionQuotaData();
+    specialStuConsumptionMachine();
+    signalR()
 }
 
 function machineTime() {
@@ -785,6 +788,245 @@ function facultyAbsenteeismTreemap()
 
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
+}
+
+function getSpecialStuConsumptionQuotaData() {
+    Url = "../Index/specialStuConsumptionAmount";
+
+    $.ajax({
+        type: "post",
+        url: Url,
+        dataType: "json",
+        success: function (data) {
+            amoubtHelper(data)
+        },
+        error: function (data) {
+            machineHelper(data)
+        }
+    });
+}
+
+function specialStuConsumptionQuota(userName, legenfdJson, seriesJson) {
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('specialStuConsumption'));
+
+    option = {
+        title: {
+            text: userName + '用户单笔消费额度分布',
+            subtext: '校园一卡通',
+            x: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            //data: ['消费 < 1 元', '消费 1-5 元', '消费 5-10 元', '消费 > 10 元']
+            data: legenfdJson
+        },
+        series: [
+            {
+                name: '单笔消费额度',
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '60%'],
+                //data: [
+                //    { value: 67, name: '消费 < 1 元' },
+                //    { value: 192, name: '消费 1-5 元' },
+                //    { value: 40, name: '消费 5-10 元' },
+                //    { value: 3, name: '消费 > 10 元' },
+                //],
+                data: seriesJson,
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option)
+}
+
+function specialStuConsumptionMachine() {
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('specialStuConsumptionMechina'));
+
+    var colors = ['#5793f3', '#d14a61', '#675bba'];
+
+    option = {
+        color: colors,
+        title: {
+            text: '董*用户消费习惯分布（机器相关）',
+            subtext: '校园一卡通'
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross'
+            }
+        },
+        grid: {
+            right: '20%'
+        },
+        toolbox: {
+            feature: {
+                dataView: { show: true, readOnly: false },
+                restore: { show: true },
+                saveAsImage: { show: true }
+            }
+        },
+        legend: {
+            data: ['消费次数（次）', '消费金额（元）']
+        },
+        xAxis: [
+            {
+                type: 'category',
+                axisTick: {
+                    alignWithLabel: true
+                },
+                data: [1, 107, 108, 11, 111, 112, 118, 12, 133, 137, 14, 15, 18, 2, 22, 24, 28, 29, 3, 32, 40, 43, 44, 46, 47, 5, 62, 63, 64, 72, 76, 8, 84, 95, 96]
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                name: '消费次数（次）',
+                min: 0,
+                max: 60,
+                position: 'left',
+                axisLine: {
+                    lineStyle: {
+                        color: colors[0]
+                    }
+                },
+                axisLabel: {
+                    formatter: '{value} 次'
+                }
+            },
+            {
+                type: 'value',
+                name: '消费金额（元）',
+                min: 0,
+                max: 150,
+                position: 'right',
+                offset: 80,
+                axisLine: {
+                    lineStyle: {
+                        color: colors[1]
+                    }
+                },
+                axisLabel: {
+                    formatter: '{value} 元'
+                }
+            },
+        ],
+        series: [
+            {
+                name: '消费次数（次）',
+                type: 'bar',
+                data: [1, 7, 7, 2, 2, 4, 1, 2, 2, 5, 7, 3, 1, 8, 5, 4, 1, 4, 19, 4, 8, 5, 3, 16, 51, 2, 17, 3, 3, 8, 1, 2, 2, 9, 6]
+            },
+            {
+                name: '消费金额（元）',
+                type: 'bar',
+                yAxisIndex: 1,
+                data: [12.5, 21.8, 19.5, 15.0, 13.0, 22.0, 12.0, 12.5, 12.0, 20.5, 41.5, 15.0, 5.5, 16.0, 22.5, 18.0, 6.0, 21.0, 29.0, 7.5, 18.0, 16.0, 6.0, 64.2, 147.39999999999998, 8.0, 69.0, 11.0, 18.0, 12.5, 8.0, 8.0, 13.0, 14.5, 10.5]
+            },
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+}
+
+function signalR() {
+    //前端Hub的使用，注意的是，Hub的名字是WorkflowHub，这里使用时首字母小写
+    var work = $.connection.workflowHub;
+
+    //对应后端的SendMessage函数，消息接收函数
+    work.client.clientAddBroadcastMessage = function (message) {
+
+        alert(message);
+        if (message == "1") {
+
+            Url = "../Index/specialStuConsumptionAmount";
+            
+            $.ajax({
+                type: "post",
+                url: Url,
+                dataType: "json",
+                success: function (data) {
+                    amoubtHelper(data)
+                },
+                error: function (data) {
+                    machineHelper(data)
+                }
+            });
+
+            Url = "../Index/specialStuConsumptionMachine";
+
+            $.ajax({
+                type: "post",
+                url: Url,
+                dataType: "json",
+                success: function (data) {
+                    machineHelper(data)
+                },
+                error: function (data) {
+                    helperB(data)
+                }
+            });
+        }
+    };
+
+    //hub连接开启
+    $.connection.hub.start().done(function () {
+
+    });
+}
+
+function amoubtHelper(data) {
+
+    obj = JSON.parse(data);
+
+    userName = '';
+    var legenfdData = new Array();
+    var seriesData = new Array();
+
+    for (var item in obj) {
+        userName = obj[item].stuName;
+        legenfdData[item] = obj[item].amount;
+
+        var series = { value: obj[item].times, name: obj[item].amount };
+        var jsonData = JSON.stringify(series);
+        
+        seriesData[item] = JSON.parse(jsonData)
+    }
+
+    var legenfdJson = JSON.stringify(legenfdData);
+    var seriesJson = JSON.stringify(seriesData);
+
+    var poolA = JSON.parse(legenfdJson)
+    var poolB = JSON.parse(seriesJson)
+
+    specialStuConsumptionQuota(userName, poolA, poolB);
+}
+
+function machineHelper(data) {
+    obj = JSON.parse(data);
+}
+
+function helperB(data) {
+    debugger;
+    obj = JSON.parse(data)
+    console.log(obj)
 }
 
 // 基于准备好的dom，初始化echarts实例

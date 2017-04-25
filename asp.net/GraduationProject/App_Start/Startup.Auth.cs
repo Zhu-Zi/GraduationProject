@@ -19,6 +19,10 @@ namespace GraduationProject
             // Use a cookie to temporarily store information about a user logging in with a third party login provider
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
+            // Any connection or hub wire up and configuration should go here 
+            // 注册SignalR
+            app.MapSignalR();  
+
             // 取消注释以下行可允许使用第三方登录提供程序登录
             //app.UseMicrosoftAccountAuthentication(
             //    clientId: "",
