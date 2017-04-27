@@ -10,12 +10,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的 ASP.NET 应用程序</title>
+    <title>数据分析报告页</title>
     @*@styles.render("~/content/css")
-      @scripts.render("~/bundles/modernizr")*@
+        @scripts.render("~/bundles/modernizr")*@
     <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.10.2.js")"></script>
+    <link href="@Url.Content("~/Content/myStyle.css")" rel="stylesheet" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.8.2.js")"></script>
+    @*<script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.10.2.js")"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.signalR-2.2.1.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/echarts.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/myCharts.js")"></script>
@@ -24,41 +26,118 @@
 </head>
 
 <body style="background-color: #e8e8e8">
-    <div id="banner" class="col-lg-12" style="background-color: #bdbab3; height: 300px"> </div>
-    <div id="left_area" class="col-lg-2" ></div>
-    <div id="content" class="col-lg-8" style="background-color: #f9f8fd; height: auto; margin-top: 60px;" >
+    <div id="banner" class="col-lg-12" style="height: 400px">
+        <div class="entry-banner">
+            <p class="entry_banner_title">14级学生消费数据分析报告</p>
+        </div> 
+    </div>
+    <div id="left_area" class="col-lg-2"></div>
+    <div id="content" class="col-lg-8 middle_area">
+
+        <div id="content0">
+            <article class="hentry">
+                <header>
+                    <h1 class="entry-title"><strong>前言</strong></h1>
+                </header>
+                <div class="entry_content">
+                    <p class="text-center">数据分析的报告等等等</p>
+                </div>
+            </article>
+        </div>
+
         <div id="content1">
-            <div id="machineTime" style="width: 1200px; height: 800px;"></div>
-            <p class="text-center">消费次数Top10 Echarts 图表</p>
+            <div id="machineTime" style="width: 1000px; height: 800px;"></div>
+            <article class="hentry">
+                <header>
+                    <h2 class="entry-title"><strong>@ViewBag.title[0]</strong></h2>
+                </header>
+                <div class="entry_content">
+                    @Html.Raw(ViewBag.content[0])
+                </div>
+            </article>
         </div>
         <div id="content2">
-            <div id="machineConsumption" style="width: 1200px; height: 800px;"></div>
-            <p class="text-center">消费金额Top10 Echarts 图表</p>
+            <div id="machineConsumption" style="width: 1000px; height: 800px;"></div>
+            <article class="hentry">
+                <header>
+                    <h2 class="entry-title"><strong>@ViewBag.title[1]</strong></h2>
+                </header>
+                <div class="entry_content">
+                    @Html.Raw(ViewBag.content[1])
+                </div>
+            </article>
         </div>
         <div id="content3">
-            <div id="stuConsumptions" style="width: 1200px; height: 800px;"></div>
-            <p class="text-center"> 拟合函数为: y=2.77x+65.95</p>
-            <p class="text-center">14级学生消费散点图 Echarts 图表 </p>
+            <div id="stuConsumptions" style="width: 1000px; height: 800px;"></div>
+            <article class="hentry">
+                <header>
+                    <h2 class="entry-title"><strong>@ViewBag.title[2]</strong></h2>
+                </header>
+                <div class="entry_content">
+                    <p class="text-center"> 拟合函数为: y=2.77x+65.95</p>
+                    @Html.Raw(ViewBag.content[2])
+                </div>
+            </article>
         </div>
         <div id="content4">
-            <div id="facultyConsumption" style="width: 1200px; height: 800px;"></div>
-            <p class="text-center">14级各专业消费额度 Echarts 图表</p>
+            <div id="facultyConsumption" style="width: 1100px; height: 800px;"></div>
+            <article class="hentry">
+                <header>
+                    <h2 class="entry-title"><strong>@ViewBag.title[3]</strong></h2>
+                </header>
+                <div class="entry_content">
+                    <p class="text-center">14级各专业消费额度 Echarts 图表</p>
+                    @Html.Raw(ViewBag.content[3])
+                </div>
+            </article>
         </div>
         <div id="content5">
-            <div id="stuConsumptionTime" style="width: 1200px; height: 800px;"></div>
-            <p class="text-center">Echarts 图表</p>
+            <div id="stuConsumptionTime" style="width: 1100px; height: 800px;"></div>
+            <article class="hentry">
+                <header>
+                    <h2 class="entry-title"><strong>@ViewBag.title[4]</strong></h2>
+                </header>
+                <div class="entry_content">
+                    <p class="text-center">Echarts 图表</p>
+                    @Html.Raw(ViewBag.content[4])
+                </div>
+            </article>
         </div>
         <div id="content6">
-            <div id="facultyAbsenteeism" style="width: 1200px; height: 800px;"></div>
-            <p class="text-center">Echarts 图表</p>
+            <div id="facultyAbsenteeism" style="width: 1000px; height: 800px;"></div>
+            <article class="hentry">
+                <header>
+                    <h2 class="entry-title"><strong>@ViewBag.title[5]</strong></h2>
+                </header>
+                <div class="entry_content">
+                    <p class="text-center">Echarts 图表</p>
+                    @Html.Raw(ViewBag.content[5])
+                </div>
+            </article>
         </div>
         <div id="content7">
-            <div id="specialStuConsumption" style="width: 1200px; height: 800px;"></div>
-            <p class="text-center">Echarts 图表</p>
+            <div id="specialStuConsumption" style="width: 1100px; height: 800px;"></div>
+            <article class="hentry">
+                <header>
+                    <h2 class="entry-title"><strong>@ViewBag.title[6]</strong></h2>
+                </header>
+                <div class="entry_content">
+                    <p class="text-center">Echarts 图表</p>
+                    @Html.Raw(ViewBag.content[6])
+                </div>
+            </article>
         </div>
         <div id="content8">
-            <div id="specialStuConsumptionMechina" style="width: 1200px; height: 800px;"></div>
-            <p class="text-center">Echarts 图表</p>
+            <div id="specialStuConsumptionMechina" style="width: 1000px; height: 800px;"></div>
+            <article class="hentry">
+                <header>
+                    <h2 class="entry-title"><strong>@ViewBag.title[7]</strong></h2>
+                </header>
+                <div class="entry_content">
+                    <p class="text-center">Echarts 图表</p>
+                    @Html.Raw(ViewBag.content[7])
+                </div>
+            </article>
         </div>
         <div id="content9">
             <p class="text-center">Echarts 图表</p>
@@ -82,7 +161,7 @@
                         <tr>
                             <td>@a.studentName</td>
                             <td>@a.collageName</td>
-                            <td>@a.className</td>                           
+                            <td>@a.className</td>
                             <td>@a.datetime</td>
                             <td>@a.week</td>
                             <td>@a.classNum</td>
@@ -91,30 +170,38 @@
                     }
                 </tbody>
             </table>
-            <p class="text-center">Echarts 图表</p>
+            <article class="hentry">
+                <header>
+                    <h2 class="entry-title"><strong>@ViewBag.title[8]</strong></h2>
+                </header>
+                <div class="entry_content">
+                    <p class="text-center">Echarts 图表</p>
+                    @Html.Raw(ViewBag.content[8])
+                </div>
+            </article>
         </div>
     </div>
-    <div id="right_area" class="col-lg-2" ></div>
+    <div id="right_area" class="col-lg-2"></div>
 
     <script type="text/javascript">
         init()
     </script>
     @*<script type="text/javascript">
-        $(function () {
+            $(function () {
 
-            //前端Hub的使用，注意的是，Hub的名字是WorkflowHub，这里使用时首字母小写
-            var work = $.connection.workflowHub;
+                //前端Hub的使用，注意的是，Hub的名字是WorkflowHub，这里使用时首字母小写
+                var work = $.connection.workflowHub;
 
-            //对应后端的SendMessage函数，消息接收函数
-            work.client.clientAddBroadcastMessage = function (message) {
-                alert(message+"fsdfsafsdfsafsdfasfdsf")
-            };
+                //对应后端的SendMessage函数，消息接收函数
+                work.client.clientAddBroadcastMessage = function (message) {
+                    alert(message+"fsdfsafsdfsafsdfasfdsf")
+                };
 
-            //hub连接开启
-            $.connection.hub.start().done(function () {
+                //hub连接开启
+                $.connection.hub.start().done(function () {
 
+                });
             });
-        });
-    </script>*@
+        </script>*@
 </body>
 </html>
